@@ -34,9 +34,12 @@ void drawSky() {
 }
 
 void drawSun(float x, float y) {
-    glColor3f(1.0f, 0.5f, 0.0f);  
+    // Outer circle (light yellow)
+    glColor3f(1.0f, 0.9f, 0.4f);  
     drawCircle(x, y, 40); 
-    glColor3f(1.0f, 0.4f, 0.0f);  
+    
+    // Inner circle (lighter yellow)
+    glColor3f(1.0f, 1.0f, 0.6f);  
     drawCircle(x, y, 30); 
 }
 
@@ -71,8 +74,8 @@ void drawGreenField() {
         glVertex2i(0, 300);
         glVertex2i(1130, 300);
 
-        // Niche Yellowish-Green (Yellow bhaab komiye deya hoyeche)
-        glColor3ub(154, 205, 50); // Yellowish-Green/Lime color
+        // Niche Yellowish-Green
+        glColor3ub(154, 205, 50); 
         glVertex2i(1130, 150);
         glVertex2i(0, 150);
     glEnd();
@@ -118,7 +121,10 @@ void display() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     drawSky();
+    
+    // Draw Sun before Hills so it rises from behind them
     drawSun(sunX, sunY); 
+    
     drawCloud(cloudX[0], 500); 
     drawCloud(cloudX[1], 460);
     drawCloud(cloudX[2], 520);
@@ -131,6 +137,7 @@ void display() {
 }
 
 void update(int value) {
+    // Cloud animation
     for(int i = 0; i < 3; i++) {
         cloudX[i] += 0.5f; 
         if (cloudX[i] > 1200.0f) {
@@ -138,11 +145,13 @@ void update(int value) {
         }
     }
 
-    sunAngle += 0.003f; 
+    // Sun animation (0.0005f makes it very slow and smooth)
+    sunAngle += 0.0005f; 
     if (sunAngle > 3.14159f) {
-        sunAngle = 0.0f; 
+        sunAngle = 0.0f; // Reset position when it sets
     }
 
+    // Parametric equation for a semi-circle path (left to right)
     sunX = 565.0f - 500.0f * cosf(sunAngle); 
     sunY = 150.0f + 400.0f * sinf(sunAngle); 
     
@@ -155,7 +164,7 @@ int main(int argc, char** argv) {
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB); 
     glutInitWindowSize(1130, 580);
     glutInitWindowPosition(100, 80);
-    glutCreateWindow("Field Color Adjustment - More Green");
+    glutCreateWindow("Slow Sunrise Animation");
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
@@ -163,6 +172,7 @@ int main(int argc, char** argv) {
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
+    // Initial position of the sun
     sunX = 565.0f - 500.0f * cosf(0.0f);
     sunY = 150.0f + 400.0f * sinf(0.0f);
 
