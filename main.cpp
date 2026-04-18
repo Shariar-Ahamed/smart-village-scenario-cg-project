@@ -117,20 +117,53 @@ void drawBlueRiver() {
     }
 }
 
+// house function
+void drawHouse(float x, float y) {
+    // Base house
+    glColor3f(0.76f, 0.60f, 0.42f); 
+    glBegin(GL_QUADS);
+        glVertex2f(x, y);
+        glVertex2f(x + 120, y);
+        glVertex2f(x + 120, y + 80);
+        glVertex2f(x, y + 80);
+    glEnd();
+
+    // Roof
+    glColor3f(0.7f, 0.1f, 0.1f);
+    glBegin(GL_TRIANGLES);
+        glVertex2f(x - 10, y + 80);
+        glVertex2f(x + 130, y + 80);
+        glVertex2f(x + 60, y + 130);
+    glEnd();
+
+    // Door
+    glColor3f(0.3f, 0.2f, 0.1f);
+    glBegin(GL_QUADS);
+        glVertex2f(x + 50, y);
+        glVertex2f(x + 75, y);
+        glVertex2f(x + 75, y + 50);
+        glVertex2f(x + 50, y + 50);
+    glEnd();
+}
+
 void display() {
     glClear(GL_COLOR_BUFFER_BIT);
 
     drawSky();
-    
-    // Draw Sun before Hills so it rises from behind them
     drawSun(sunX, sunY); 
-    
     drawCloud(cloudX[0], 500); 
     drawCloud(cloudX[1], 460);
     drawCloud(cloudX[2], 520);
 
     drawHills();
+
+    // Village Houses
     drawGreenField(); 
+
+    // 🏡 Two village houses on grass
+    drawHouse(200, 170);
+    drawHouse(750, 180);
+
     drawBlueRiver();
 
     glutSwapBuffers(); 
