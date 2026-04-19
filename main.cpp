@@ -13,7 +13,11 @@ void display()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    //-----------------------------------FIELD ------------------------------
+    //-----------------------SKY------------------------------------------------------------------
+    glColor3ub(135, 206, 250); // Light Blue
+    glRecti(-200, 300, 200, 100);
+
+    //-----------------------------------FIELD----------------------------------------------------
     glBegin(GL_POLYGON);
         glColor3ub(0, 100, 0); // Green
         glVertex2i(-200, 100);
@@ -29,21 +33,21 @@ void display()
         glVertex2i(-200, 100);
     glEnd();
 
-    //------------------------------------------RIVER--------------------------------------------------
+    //------------------------------------------RIVER----------------------------------------------
     glBegin(GL_POLYGON);
         glColor3ub(30, 144, 255); // Deep Sky Blue
         glVertex2i(-200, -50);
         glVertex2i(200, -30);
-        
-        glColor3ub(0, 0, 128);    // Navy Blue 
+
+        glColor3ub(0, 0, 128);    // Navy Blue
         glVertex2i(200, -200);
         glVertex2i(-200, -200);
         glVertex2i(-200, -50);
     glEnd();
 
-    //---------------------------------------RIVER BORDER---------------------------------------------
+    //---------------------------------------RIVER BORDER------------------------------------------
     glBegin(GL_POLYGON);
-        glColor3ub(128, 128, 0); // Olive color border
+        glColor3ub(128, 128, 0); // Olive
         glVertex2i(-200, -45);
         glVertex2i(200, -25);
         glVertex2i(200, -30);
@@ -60,7 +64,7 @@ int main(int argc, char *argv[])
     glutInitWindowSize(1200, 800);
     glutInitWindowPosition(10, 10);
     glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
-    glutCreateWindow("Field and River Only");
+    glutCreateWindow("Sky, Field and River");
     init();
     glutDisplayFunc(display);
     glutMainLoop();
