@@ -13,7 +13,7 @@ void display()
 {
     glClear(GL_COLOR_BUFFER_BIT);
 
-    //-----------------------------------FIELD (MATH)------------------------------
+    //-----------------------------------FIELD ------------------------------
     glBegin(GL_POLYGON);
         glColor3ub(0, 100, 0); // Green
         glVertex2i(-200, 100);
@@ -35,7 +35,7 @@ void display()
         glVertex2i(-200, -50);
         glVertex2i(200, -30);
         
-        glColor3ub(0, 0, 128);    // Navy Blue (Niche dark effect)
+        glColor3ub(0, 0, 128);    // Navy Blue 
         glVertex2i(200, -200);
         glVertex2i(-200, -200);
         glVertex2i(-200, -50);
