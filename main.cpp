@@ -40,6 +40,20 @@ void sun(double x, double y)
     glEnd();
 }
 
+//---------------- FENCE ----------------
+void fence(int x)
+{
+    glBegin(GL_POLYGON);
+        glColor3ub(184,134,11);
+
+        glVertex2i(190-x,130);
+        glVertex2i(190-x,70);
+        glVertex2i(187-x,70);
+        glVertex2i(187-x,130);
+        glVertex2i(190-x,130);
+    glEnd();
+}
+
 //---------------- DISPLAY ----------------
 void display()
 {
@@ -69,6 +83,19 @@ void display()
         glVertex2i(-200,-200);
         glVertex2i(-200,100);
     glEnd();
+
+//---------------- FENCE ----------------
+    int x=0;
+    for(int i=0;i<39;i++)
+    {
+        fence(x);
+        x+=10;
+    }
+
+    glColor3ub(184,134,11);
+    glRecti(-200,120,200,115);
+    glRecti(-200,100,200,95);
+    glRecti(-200,85,200,80);
 
 //---------------- RIVER ----------------
     glBegin(GL_POLYGON);
@@ -112,7 +139,6 @@ void display()
     if(tx>200) tx=-200;
 
 //---------------- TREE ----------------
-    // small tree
     glColor3ub(139,69,19);
     glRecti(-20,200,-13,140);
 
@@ -123,7 +149,6 @@ void display()
     sun(-30,175);
     sun(0,170);
 
-    // big tree trunk
     glBegin(GL_POLYGON);
         glColor3ub(139,69,19);
         glVertex2i(-170,160);
@@ -134,7 +159,6 @@ void display()
         glVertex2i(-150,160);
     glEnd();
 
-    // branches
     glBegin(GL_POLYGON);
         glVertex2i(-153,100);
         glVertex2i(-100,200);
@@ -156,7 +180,6 @@ void display()
         glVertex2i(-150,160);
     glEnd();
 
-    // leaves
     glColor3ub(0,128,0);
 
     sun(-95,200);
