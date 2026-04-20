@@ -3,7 +3,7 @@
 #include<stdlib.h>
 #include<math.h>
 
-double r=.2;
+double r=.2,s=15;
 int i;
 float tx=10;
 
@@ -20,8 +20,21 @@ void cloud(double x, double y)
     glBegin(GL_TRIANGLE_FAN);
     for(i=0;i<360;i++)
     {
-        double dx = x + cos((i*3.14)/180)*20; // size fix
+        double dx = x + cos((i*3.14)/180)*20;
         double dy = y + sin((i*3.14)/180)*10;
+        glVertex2d(dx,dy);
+    }
+    glEnd();
+}
+
+//---------------- SUN ----------------
+void sun(double x, double y)
+{
+    glBegin(GL_TRIANGLE_FAN);
+    for(i=0;i<360;i++)
+    {
+        double dx = x + cos((i*3.14)/180)*s;
+        double dy = y + sin((i*3.14)/180)*s;
         glVertex2d(dx,dy);
     }
     glEnd();
@@ -35,6 +48,10 @@ void display()
 //---------------- SKY ----------------
     glColor3ub(135,206,250);
     glRecti(-200,300,200,100);
+
+//---------------- SUN ----------------
+    glColor3ub(255,215,0);
+    sun(90,250);
 
 //---------------- FIELD ----------------
     glBegin(GL_POLYGON);
@@ -73,7 +90,7 @@ void display()
         glVertex2i(-200,-50);
     glEnd();
 
-//---------------- CLOUD DRAW ----------------
+//---------------- CLOUD ----------------
     glPushMatrix();
     glColor3ub(255,255,255);
     glTranslatef(tx,0,0);
