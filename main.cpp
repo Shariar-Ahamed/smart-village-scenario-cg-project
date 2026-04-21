@@ -7,6 +7,9 @@ int i;
 float  tx=10,bx=10;
 float cowX = 50;
 
+float scaleFactor = 1.0f; //boat
+bool scaleUp = true;
+float gearAngle = 0.0f;
 
 
 void init()
@@ -14,6 +17,48 @@ void init()
     glClearColor(1.0f,1.0f,1.0f,1.0f);
     glOrtho(-210,210,-220,310,-210,310);
 
+}
+void drawGear(float x, float y) {
+    glPushMatrix();
+    glTranslatef(x, y, 0);
+    glRotatef(gearAngle, 0, 0, 1); // Rotate on Z-axis
+
+    // Gear Body
+    glColor3ub(255, 215, 0);
+    glBegin(GL_TRIANGLE_FAN);
+        glVertex2f(0, 0);
+        for(int i = 0; i <= 360; i++) {
+            double angle = (i * 3.1416) / 180;
+            glVertex2d(cos(angle) * 10, sin(angle) * 10);
+        }
+    glEnd();
+
+    // Gear Spokes
+    glColor3ub(0, 0, 0);
+    glBegin(GL_LINES);
+        for(int i = 0; i < 8; i++) {
+            double angle = (i * 3.1416) / 4;
+            glVertex2f(0, 0);
+            glVertex2d(cos(angle) * 12, sin(angle) * 12);
+        }
+    glEnd();
+    glPopMatrix();
+}
+
+void keyboard(unsigned char key, int x, int y) {
+    switch(key) {
+        case '+': // Zoom In Boat
+            scaleFactor += 0.05f;
+            break;
+        case '-': // Zoom Out Boat
+            scaleFactor -= 0.05f;
+            if(scaleFactor < 0.2f) scaleFactor = 0.2f;
+            break;
+        case 'r': // Reset Size
+            scaleFactor = 1.0f;
+            break;
+    }
+    glutPostRedisplay();
 }
 //-----------------------sky------------------------------------------------------------------
 
@@ -463,10 +508,12 @@ void display()
         glVertex2i(-200,-45);
     glEnd();
 
+
 //-------------------------------------------BOAT-------------------------------------------------
     glPushMatrix();
 	glColor3f(0.0f, 0.0f, 0.0f);//Black
     glTranslatef(bx,0,0);
+    glScalef(scaleFactor, scaleFactor, 1.0);
     glBegin(GL_POLYGON);
         glVertex2i(-180,-70);
         glVertex2i(-165,-100);
@@ -490,10 +537,7 @@ void display()
         glVertex2i(-85,-100);
     glEnd();
     glColor3ub(211,211,211);
-    sun(-165,260);
-    sun(-185,245);
-    sun(-180,240);
-    sun(-152,243);
+
 
     //--------------------------BOAT FLAG----------------------------
     glBegin(GL_POLYGON);
@@ -594,18 +638,20 @@ void display()
 
 
 
-
-
     glPopMatrix();
-    bx+=.03;
-    if(bx>270)
-    bx=-180;
+
 
 
     glutPostRedisplay();
     glColor3ub(255,255,255);//
     glRecti(-210,310,-200,-210);
     glRecti(200,310,210,-210);
+
+    //========================================= Boat movement
+bx += 0.03;
+if(bx > 270)
+    bx = -180;
+
 //--------------------------------------------------------------------------------------------
     glFlush();
 }
@@ -619,8 +665,12 @@ int main(int argc,char *argv[])
     glutInitWindowPosition(10,10);
     glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
     glutCreateWindow(" village scenery ");
+
     init();
     glutDisplayFunc(display);
+
+    glutKeyboardFunc(keyboard); // boat control
+
     glutMainLoop();
     return 0;
 }
