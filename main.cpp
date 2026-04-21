@@ -97,6 +97,155 @@ void display()
     glRecti(-200,100,200,95);
     glRecti(-200,85,200,80);
 
+    // --------------------------------------- HOUSE one----------------------------
+    glBegin(GL_POLYGON);  // first Part
+        glColor3ub(128,0,0);//gray
+        glVertex2i(-58,115);
+        glVertex2i(-75,145);
+        glVertex2i(-115,150);//point
+        glVertex2i(-90,100);
+        glVertex2i(-62,100);
+        glVertex2i(-58,115);
+
+    glEnd();
+    glBegin(GL_POLYGON);  // second Part
+        glColor3ub(120,0,0);//maroon
+        glVertex2i(-115,150);
+        glVertex2i(-130,100);
+        glVertex2i(-120,100);//point
+        glVertex2i(-108,137);//point
+        glVertex2i(-115,150);
+    glEnd();
+    glBegin(GL_POLYGON);  // third Part
+        glColor3ub(46,139,87);//
+        glVertex2i(-108,137);
+        glVertex2i(-120,100);
+        glVertex2i(-120,45);
+        glVertex2i(-90,40);//point
+        glVertex2i(-90,100);
+        glVertex2i(-108,137);
+    glEnd();
+
+
+    glBegin(GL_POLYGON);  // fourth Part
+        glColor3ub(143,188,143);//
+        glVertex2i(-90,40);
+        glVertex2i(-60,45);
+        glVertex2i(-60,100);
+        glVertex2i(-90,100);
+
+    glEnd();
+    glColor3ub(120,0,0);//maroon // Door One
+        glRecti(-75,80,-65,40);
+    glColor3ub(120,0,0);//maroon // Door One
+        glRecti(-110,90,-100,70);
+    glBegin(GL_POLYGON);  // third Part (lower part 1)
+        glColor3ub(0,0,0);//
+        glVertex2i(-90,40);
+        glVertex2i(-123,45);
+        glVertex2i(-123,35);
+        glVertex2i(-90,30);
+        glVertex2i(-90,40);
+
+    glEnd();
+    glBegin(GL_POLYGON);  // third Part (lower part 2)
+        glColor3ub(0,0,0);//
+        glVertex2i(-90,40);
+        glVertex2i(-55,45);
+        glVertex2i(-55,35);
+        glVertex2i(-90,30);
+        glVertex2i(-90,40);
+
+
+    glEnd();
+
+
+
+
+//-------------------------------------------  HOUSE  two  -------------------------------------------------
+    glBegin(GL_POLYGON);  // First part
+
+        glColor3ub(25,25,112);//midnight blue
+        glVertex2i(-50,140);
+        glVertex2i(0,149);
+        glVertex2i(-12,88);
+        glVertex2i(-65,89);
+        glVertex2i(-50,140);
+    glEnd();
+
+
+
+
+
+    glBegin(GL_POLYGON);  // Second Part
+    glColor3ub(70,130,180);//midnight blue
+        glVertex2i(-60,90);
+        glVertex2i(-60,30);
+        glVertex2i(-10,25);
+        glVertex2i(-10,95);
+    glEnd();
+
+
+//---------------------------------------Door------------------------------------------
+    glColor3ub(25,25,112);//midnight blue
+    glRecti(-45,70,-30,27);
+
+//--------------------------------------------------------------------------
+    glBegin(GL_POLYGON);   // Third part
+    glColor3ub(95,158,160);//midnight blue
+        glVertex2i(-10,25);
+        glVertex2i(18,35);
+        glVertex2i(18,100);
+        glVertex2i(0,148);
+        glVertex2i(-10,100);
+        glVertex2i(-10,25);
+
+    glEnd();
+
+    glBegin(GL_POLYGON);
+    glColor3ub(25,25,112);//midnight blue
+        glVertex2i(-1,150);
+        glVertex2i(20,100);
+        glVertex2i(17,90);
+        glVertex2i(-4,140);
+        glVertex2i(-1,150);
+
+    glEnd();
+
+
+    glBegin(GL_POLYGON);  // door
+    glColor3ub(25,25,112);//midnight blue
+        glVertex2i(0,70);
+        glVertex2i(10,73);
+        glVertex2i(10,32);
+        glVertex2i(0,29);
+        glVertex2i(0,70);
+
+
+    glEnd();
+    glBegin(GL_POLYGON);  // (lower part 1)
+        glColor3ub(0,0,0);//
+        glVertex2i(-10,25);
+        glVertex2i(-10,15);
+        glVertex2i(20,27);
+        glVertex2i(20,37);
+        glVertex2i(-10,25);
+
+
+    glEnd();
+    glBegin(GL_POLYGON);  // (lower part 2)
+        glColor3ub(0,0,0);//
+        glVertex2i(-10,25);
+        glVertex2i(-62,30);
+        glVertex2i(-62,20);
+        glVertex2i(-10,15);
+        glVertex2i(-10,25);
+
+
+
+
+    glEnd();
+
 //---------------- RIVER ----------------
     glBegin(GL_POLYGON);
         glColor3ub(30,144,255);
