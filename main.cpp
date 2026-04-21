@@ -346,6 +346,90 @@ void display()
     sun(-175,225);
     sun(-195,190);
 
+    //-----------------------------------------------TUBEWELL-----------------------------------------
+
+    glBegin(GL_POLYGON);  // First part
+
+        glColor3ub(0,100,0);//
+        glVertex2i(115,65);
+        glVertex2i(95,5);
+        glVertex2i(145,5);
+        glVertex2i(165,65);
+        glVertex2i(115,65);
+
+    glEnd();
+    glBegin(GL_POLYGON);  // second part
+
+        glColor3ub(143,188,143);//
+        glVertex2i(120,58);
+        glVertex2i(104,13);
+        glVertex2i(140,12);
+        glVertex2i(155,58);
+        glVertex2i(120,58);
+
+    glEnd();
+    glColor3ub(0,0,0);// third part
+        glRecti(95,5,145,-6);
+
+    glBegin(GL_POLYGON);  // fourth  part
+        glColor3ub(0,0,0);//
+        glVertex2i(165,65);
+        glVertex2i(166,55);
+        glVertex2i(145,-6);
+        glVertex2i(145,5);
+        glVertex2i(165,65);
+    glEnd();
+    glBegin(GL_POLYGON);  // tubewell 1st part
+        glColor3ub(184,134,11);
+        glVertex2i(120,85);
+        glVertex2i(120,30);
+        glVertex2i(125,28);
+        glVertex2i(130,30);
+        glVertex2i(130,85);
+        glVertex2i(125,87);
+        glVertex2i(120,85);
+    glEnd();
+    glBegin(GL_POLYGON);  // tubewell second part
+        glColor3ub(255,215,0);//golden rod
+        glVertex2i(120,85);
+        glVertex2i(125,80);
+        glVertex2i(130,85);
+        glVertex2i(125,87);
+        glVertex2i(120,85);
+
+    glEnd();
+    glColor3ub(205,133,63);//golden rod // tubewell third part
+    glRecti(123,100,126,85);
+
+    glBegin(GL_POLYGON);  // tubewell fourth part
+        glColor3ub(139,69,19);//saddle brown
+        glVertex2i(126,100);
+        glVertex2i(128,102);
+        glVertex2i(128,110);
+        glVertex2i(126,113);
+        glVertex2i(124,111);
+        glVertex2i(100,80);
+        glVertex2i(90,70);
+        glVertex2i(90,65);
+        glVertex2i(100,73);
+        glVertex2i(126,100);
+    glEnd();
+    glBegin(GL_POLYGON);  // tubewell 5th part
+        glColor3ub(210,105,30);//golden rod
+        glVertex2i(130,70);
+        glVertex2i(140,70);
+        glVertex2i(140,50);
+        glVertex2i(136,50);
+        glVertex2i(136,60);
+        glVertex2i(130,60);
+        glVertex2i(130,70);
+
+    glEnd();
+    glColor3ub(210,105,30);//golden rod //tubewell last part
+    glRecti(123,29,127,20);
+    glColor3ub(139,69,19);//saddle brown
+    glRecti(118,22,132,14);
+
 //---------------- END ----------------
     glutPostRedisplay();
     glFlush();
