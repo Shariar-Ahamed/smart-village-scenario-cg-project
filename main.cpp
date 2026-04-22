@@ -8,7 +8,7 @@ float  tx=10,bx=10;
 float sx = -150;     // sun x position
 float mx = 220;      // moon x position (start outside right)
 bool isNight = false;
-
+int starBlink = 0; //star
 float scaleFactor = 1.0f; //boat
 bool scaleUp = true;
 float gearAngle = 0.0f;
@@ -71,7 +71,14 @@ void moon(double x, double y)
     glEnd();
 }
 
-
+void star(float x, float y)
+{
+    glPointSize(4);
+    glColor3ub(255,255,255);
+    glBegin(GL_POINTS);
+        glVertex2f(x,y);
+    glEnd();
+}
 
 void gear(float x, float y) {
     glPushMatrix();
@@ -167,8 +174,32 @@ void display()
 
     glClear(GL_COLOR_BUFFER_BIT);
 //-----------------------sky------------------------------------------------------------------
-    glColor3ub(135,206,250);//light blue
-        glRecti(-200,300,200,100);
+
+
+
+//-----------------------sky------------------------------------------------------------------
+if(isNight)
+{
+    glColor3ub(10,10,40);   // dark night sky
+}
+else
+{
+    glColor3ub(135,206,250); // day sky
+}
+
+glRecti(-200,300,200,100);
+
+if(isNight)
+{
+    if(starBlink % 2 == 0)
+    {
+        star(-180,260); star(-140,240); star(-100,270);
+        star(-60,250);  star(-20,260);  star(20,240);
+        star(60,270);   star(100,250);  star(140,260);
+        star(170,230);
+    }
+}
+
 //-----------------------------------field------------------------------
     glBegin(GL_POLYGON);
         glColor3ub(0,100,0);//green
@@ -187,7 +218,6 @@ void display()
         glVertex2i(-200,100);
 
     glEnd();
-
 
 
 //-------------------SUN-------------------------
@@ -225,6 +255,7 @@ else
     tx+=.01;
     if(tx>200)
     tx=-200;
+
 // ------------------------------------fence--------------------------
     int x=0;
     for(int i=0;i<39;i++)
@@ -539,13 +570,23 @@ else
 
 //------------------------------------------RIVER--------------------------------------------------
     glBegin(GL_POLYGON);
-        glColor3ub(30,144,255);
-        glVertex2i(-200,-50);
-        glVertex2i(200,-30);
-        glColor3ub(0,0,128);
-        glVertex2i(200,-200);
-        glVertex2i(-200,-200);
-        glVertex2i(-200,-50);
+
+    if(isNight)
+{
+    // 🌙 NIGHT RIVER (dark + reflection feel)
+    glColor3ub(0,0,50);
+}
+else
+{
+    // 🌞 DAY RIVER (blue)
+    glColor3ub(30,144,255);
+}
+  glVertex2i(-200,-50);
+glVertex2i(200,-30);
+
+glVertex2i(200,-200);
+glVertex2i(-200,-200);
+glVertex2i(-200,-50);
     glEnd();
     glBegin(GL_POLYGON); // border
         glColor3ub(128,128,0);
@@ -707,6 +748,8 @@ gearAngle += 0.05;
 if(gearAngle > 360)
     gearAngle -= 360;
 
+    starBlink++;
+
 // ======================================SUN movement
 if(!isNight)
 {
@@ -747,7 +790,7 @@ int main(int argc,char *argv[])
     init();
     glutDisplayFunc(display);
 
-    glutKeyboardFunc(keyboard); // boat control + Rain
+    glutKeyboardFunc(keyboard); // boat control 
 
     glutMainLoop();
     return 0;
