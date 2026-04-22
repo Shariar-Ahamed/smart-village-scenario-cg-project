@@ -8,12 +8,38 @@ float  tx=10,bx=10;
 float sx = -150;     // sun x position
 float mx = 220;      // moon x position (start outside right)
 bool isNight = false;
-int starBlink = 0; //star
+int starBlink = 0;
 float solarAngle = 0;
-float scaleFactor = 1.0f; //boat
+
+float scaleFactor = 1.0f;
 bool scaleUp = true;
 float gearAngle = 0.0f;
 
+// DDa algorithom
+void DDA(float x1, float y1, float x2, float y2)
+{
+    float dx = x2 - x1;
+    float dy = y2 - y1;
+
+    float steps = (abs(dx) > abs(dy)) ? abs(dx) : abs(dy);
+
+    float xInc = dx / steps;
+    float yInc = dy / steps;
+
+    float x = x1;
+    float y = y1;
+
+    glBegin(GL_POINTS);
+    for(int i = 0; i <= steps; i++)
+    {
+        glVertex2f(x, y);
+        x += xInc;
+        y += yInc;
+    }
+    glEnd();
+}
+
+// mid point
 void drawCircle(int xc, int yc, int r)
 {
     int x = 0;
@@ -52,9 +78,13 @@ void init()
     glClearColor(1.0f,1.0f,1.0f,1.0f);
     glOrtho(-210,210,-220,310,-210,310);
 
+    // ⭐ ADD THIS (IMPORTANT)
+    glEnable(GL_POINT_SMOOTH);
+    glPointSize(4);
+    glPointSize(2.0);
 }
 
-// _________==================Windmaill===============
+// _________Windmaill
 void windmill(int x, int y)
 {
     // pole
@@ -89,8 +119,30 @@ void windmill(int x, int y)
 
     glPopMatrix();
 }
-//-----------------------sun------------------------------------------------------------------
 
+
+//-----------------------sky------------------------------------------------------------------
+
+//-----------------------cloud-----------------------------------------------------------------
+void cloud(double x, double y)
+{
+
+
+    glBegin(GL_TRIANGLE_FAN);
+        for(i=0;i<360;i++)
+        {
+            x=x+cos((i*3.14)/180)*r;
+            y=y+sin((i*3.14)/180)*r;
+
+            glVertex2d(x,y);
+
+        }
+
+    glEnd();
+
+
+
+}
 void sun(double x, double y)
 {
 
@@ -112,44 +164,52 @@ void sun(double x, double y)
 
 }
 
-//-----------------------moon------------------------------------------------------------------
+//-----------Sun Ray
+void sunRays(float cx, float cy)
+{
+    glColor3ub(255, 255, 0);
+
+    // 8 directions rays
+    DDA(cx, cy, cx+40, cy);
+    DDA(cx, cy, cx-40, cy);
+    DDA(cx, cy, cx, cy+40);
+    DDA(cx, cy, cx, cy-40);
+
+    DDA(cx, cy, cx+30, cy+30);
+    DDA(cx, cy, cx-30, cy+30);
+    DDA(cx, cy, cx+30, cy-30);
+    DDA(cx, cy, cx-30, cy-30);
+}
 
 void moon(double x, double y)
 {
-    // 🌙 Big moon (base)
-    glColor3ub(255,255,255);
+    glPushMatrix();
+
+    glColor3ub(255,255,255); // pure white moon
 
     glBegin(GL_TRIANGLE_FAN);
-        glVertex2d(x, y);
-        for(int i=0;i<=360;i++)
-        {
-            double angle = i * 3.1416 / 180;
-            glVertex2d(x + cos(angle)*12, y + sin(angle)*12);
-        }
+    glVertex2d(x, y);
+
+    for(i=0;i<=360;i++)
+    {
+        double angle = (i * 3.1416) / 180;
+        glVertex2d(x + cos(angle)*15,
+                   y + sin(angle)*15);
+    }
     glEnd();
 
-    glColor3ub(10,10,40);   // same as night sky (natural shadow)
-
-    glBegin(GL_TRIANGLE_FAN);
-        glVertex2d(x + 5, y + 2);
-        for(int i=0;i<=360;i++)
-        {
-            double angle = i * 3.1416 / 180;
-            glVertex2d(x + 5 + cos(angle)*12, y + sin(angle)*12);
-        }
-    glEnd();
+    glPopMatrix();
 }
-//----------------------------------star=========================
+
 void star(float x, float y)
 {
-    glPointSize(4);
     glColor3ub(255,255,255);
     glBegin(GL_POINTS);
         glVertex2f(x,y);
     glEnd();
 }
-//===========================solar light======================
 
+//__________solar light
 void solarLight(double x, double y)
 {
     // pole
@@ -183,70 +243,55 @@ void solarLight(double x, double y)
     glEnd();
 }
 
-//===============================gear==============================
-void gear(float x, float y) {
+// Walikin path
+void walkingPath()
+{
+    glColor3ub(245,245,245);
+
+    // main path
+    DDA(-200, -20, 200, -20);
+
+    // side border lines
+    glColor3ub(200,200,200);
+    DDA(-200, -25, 200, -25);
+    DDA(-200, -15, 200, -15);
+}
+
+
+// -------------Gear ________________________
+
+void gear(double x, double y)
+{
     glPushMatrix();
     glTranslatef(x, y, 0);
-    glRotatef(gearAngle, 0, 0, 1); // Rotate on Z-axis
+    glRotatef(gearAngle, 0, 0, 1);
 
-    // Gear Body
-    glColor3ub(255, 215, 0);
+    // 🔵 Outer circle
+    glColor3ub(255,215,0);
     glBegin(GL_TRIANGLE_FAN);
-        glVertex2f(0, 0);
-        for(int i = 0; i <= 360; i++) {
-            double angle = (i * 3.1416) / 180;
-            glVertex2d(cos(angle) * 10, sin(angle) * 10);
-        }
-    glEnd();
-
-    // Gear Spokes
-    glColor3ub(0, 0, 0);
-    glBegin(GL_LINES);
-        for(int i = 0; i < 8; i++) {
-            double angle = (i * 3.1416) / 4;
-            glVertex2f(0, 0);
-            glVertex2d(cos(angle) * 12, sin(angle) * 12);
-        }
-    glEnd();
-    glPopMatrix();
-}
-
-void keyboard(unsigned char key, int x, int y) {
-    switch(key) {
-        case '+': // Zoom In Boat
-            scaleFactor += 0.05f;
-            break;
-        case '-': // Zoom Out Boat
-            scaleFactor -= 0.05f;
-            if(scaleFactor < 0.2f) scaleFactor = 0.2f;
-            break;
-        case 'r': // Reset Size
-            scaleFactor = 1.0f;
-            break;
+    glVertex2f(0,0);
+    for(int i=0;i<=360;i++)
+    {
+        double angle = (i * 3.1416) / 180;
+        glVertex2d(cos(angle)*10, sin(angle)*10);
     }
-    glutPostRedisplay();
-}
-//-----------------------sky------------------------------------------------------------------
+    glEnd();
 
-void cloud(double x, double y)
-{
+    // ⚫ Spokes (rotation visible hobe)
+    glColor3ub(0,0,0);
+    glBegin(GL_LINES);
 
+    for(int i=0;i<8;i++) // 8 ta line
+    {
+        double angle = (i * 3.1416) / 4;
 
-    glBegin(GL_TRIANGLE_FAN);
-        for(i=0;i<360;i++)
-        {
-            x=x+cos((i*3.14)/180)*r;
-            y=y+sin((i*3.14)/180)*r;
-
-            glVertex2d(x,y);
-
-        }
-
+        glVertex2f(0,0);
+        glVertex2d(cos(angle)*10, sin(angle)*10);
+    }
 
     glEnd();
 
-
-
+    glPopMatrix();
 }
 
 // ------------------------------------Fence-------------------------------------------------
@@ -267,20 +312,33 @@ void fence(int x)
 
 }
 
-//--------------------------------------------------------------------------------------------
+//-------------------------Boat scelaing control-------------------------------------------------------------------
 
+//---------------- KEYBOARD ONLY BOAT ----------------
+void keyboard(unsigned char key, int x, int y)
+{
+    switch(key)
+    {
+        case '+':   // zoom in
+            scaleFactor += 0.05f;
+            break;
 
+        case '-':   // zoom out
+            scaleFactor -= 0.05f;
+            if(scaleFactor < 0.2f) scaleFactor = 0.2f; // limit
+            break;
 
+        case 'r':   // reset size
+            scaleFactor = 1.0f;
+            break;
+    }
+}
 
 
 void display()
 {
 
     glClear(GL_COLOR_BUFFER_BIT);
-//-----------------------sky------------------------------------------------------------------
-
-
-
 //-----------------------sky------------------------------------------------------------------
 if(isNight)
 {
@@ -303,7 +361,6 @@ if(isNight)
         star(170,230);
     }
 }
-
 //-----------------------------------field------------------------------
     glBegin(GL_POLYGON);
         glColor3ub(0,100,0);//green
@@ -314,21 +371,21 @@ if(isNight)
         glVertex2i(50,70);
         glVertex2i(100,180);
         glVertex2i(200,100);
+
         glColor3ub(255,215,0);//gold
         glVertex2i(200,-200);
-
         glVertex2i(-200,-200);
+
         glColor3ub(255,215,0);//gold
         glVertex2i(-200,100);
 
-    glEnd();
 
+
+    glEnd();
 
     windmill(150, 100);
 
-
 //-------------------SUN-------------------------
-  //-------------------==============================SUN-------------------------
 if(!isNight)
 {
     glColor3ub(255,215,0);
@@ -340,29 +397,6 @@ else
 {
     moon(mx,250);
 }
-
-//-------------------------------------------CLOUD-------------------------------------------------
-	glPushMatrix();
-	glColor3ub(220,220,220);
-    glTranslatef(tx,0,0);
-    cloud(0,250);
-    cloud(15,245);
-    cloud(10,240);
-    cloud(-2,243);
-
-
-
-    cloud(-80,250);
-    cloud(-95,245);
-    cloud(-90,240);
-    cloud(-90,243);
-    cloud(-75,243);
-
-    glPopMatrix();
-    tx+=.01;
-    if(tx>200)
-    tx=-200;
-
 // ------------------------------------fence--------------------------
     int x=0;
     for(int i=0;i<39;i++)
@@ -372,9 +406,11 @@ else
     }
 
     glColor3ub(184,134,11);
+
     glRecti(-200,120,200,115);
     glRecti(-200,100,200,95);
     glRecti(-200,85,200,80);
+
 
     solarLight(-180, 120);
 solarLight(-120, 120);
@@ -682,10 +718,11 @@ solarLight(120, 120);
     glEnd();
 
 
+walkingPath();
 //------------------------------------------RIVER--------------------------------------------------
-    glBegin(GL_POLYGON);
+glBegin(GL_POLYGON);
 
-    if(isNight)
+if(isNight)
 {
     // 🌙 NIGHT RIVER (dark + reflection feel)
     glColor3ub(0,0,50);
@@ -695,13 +732,24 @@ else
     // 🌞 DAY RIVER (blue)
     glColor3ub(30,144,255);
 }
-  glVertex2i(-200,-50);
+
+glVertex2i(-200,-50);
 glVertex2i(200,-30);
+
+if(isNight)
+{
+    glColor3ub(0,0,30);
+}
+else
+{
+    glColor3ub(0,0,128);
+}
 
 glVertex2i(200,-200);
 glVertex2i(-200,-200);
 glVertex2i(-200,-50);
-    glEnd();
+
+glEnd();
     glBegin(GL_POLYGON); // border
         glColor3ub(128,128,0);
         glVertex2i(-200,-45);
@@ -711,13 +759,32 @@ glVertex2i(-200,-50);
         glVertex2i(-200,-45);
     glEnd();
 
+//-------------------------------------------CLOUD-------------------------------------------------
+	glPushMatrix();
+	glColor3ub(220,220,220);
+    glTranslatef(tx,0,0);
+    cloud(0,250);
+    cloud(15,245);
+    cloud(10,240);
+    cloud(-2,243);
 
+
+
+    cloud(-80,250);
+    cloud(-95,245);
+    cloud(-90,240);
+    cloud(-90,243);
+    cloud(-75,243);
+
+    glPopMatrix();
+    tx+=.01;
+    if(tx>200)
+    tx=-200;
 //-------------------------------------------BOAT-------------------------------------------------
     glPushMatrix();
 	glColor3f(0.0f, 0.0f, 0.0f);//Black
     glTranslatef(bx,0,0);
     glScalef(scaleFactor, scaleFactor, 1.0);
-//    drawGear(-120, -85);
     glBegin(GL_POLYGON);
         glVertex2i(-180,-70);
         glVertex2i(-165,-100);
@@ -840,8 +907,10 @@ glVertex2i(-200,-50);
         glVertex2i(-100,-100);
     glEnd();
 
+
 solarAngle += 0.5;
-gear(-120,-90);  // ==============================grar function call
+gear(-120,-90);
+
     glPopMatrix();
 
 
@@ -851,20 +920,20 @@ gear(-120,-90);  // ==============================grar function call
     glRecti(-210,310,-200,-210);
     glRecti(200,310,210,-210);
 
-    //========================================= Boat movement
+    // Boat movement
 bx += 0.03;
 if(bx > 270)
     bx = -180;
-// ---------------- GEAR ----------------
 
-// ============================================Gear rotation
-gearAngle += 0.05;
+// Gear rotation
+gearAngle += 5.0;
 if(gearAngle > 360)
     gearAngle -= 360;
 
-    starBlink++;
+// star blink animation
+starBlink++;
 
-// ======================================SUN movement
+// SUN movement
 if(!isNight)
 {
     sx += 0.03;
@@ -877,7 +946,7 @@ if(!isNight)
 }
 else
 {
-    // ==================================MOON movement
+    // MOON movement
     mx -= 0.03;
 
     if(mx < -220)
@@ -886,7 +955,9 @@ else
         sx = -150;
     }
 }
-
+gearAngle += 2.0;
+if(gearAngle > 360)
+    gearAngle -= 360;
 //--------------------------------------------------------------------------------------------
     glFlush();
 }
@@ -904,7 +975,7 @@ int main(int argc,char *argv[])
     init();
     glutDisplayFunc(display);
 
-    glutKeyboardFunc(keyboard); // boat control + Rain
+    glutKeyboardFunc(keyboard); // boat control
 
     glutMainLoop();
     return 0;
