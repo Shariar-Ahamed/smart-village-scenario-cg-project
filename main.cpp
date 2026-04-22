@@ -5,7 +5,9 @@
 double  r=.2,s=.3;
 int i;
 float  tx=10,bx=10;
-float cowX = 50;
+float sx = -150;     // sun x position
+float mx = 220;      // moon x position (start outside right)
+bool isNight = false;
 
 float scaleFactor = 1.0f; //boat
 bool scaleUp = true;
@@ -18,6 +20,59 @@ void init()
     glOrtho(-210,210,-220,310,-210,310);
 
 }
+//-----------------------sun------------------------------------------------------------------
+
+void sun(double x, double y)
+{
+
+
+    glBegin(GL_TRIANGLE_FAN);
+        for(i=0;i<360;i++)
+        {
+            x=x+cos((i*3.14)/180)*s;
+            y=y+sin((i*3.14)/180)*s;
+
+            glVertex2d(x,y);
+
+        }
+
+
+    glEnd();
+
+
+
+}
+
+//-----------------------moon------------------------------------------------------------------
+
+void moon(double x, double y)
+{
+    // 🌙 Big moon (base)
+    glColor3ub(255,255,255);
+
+    glBegin(GL_TRIANGLE_FAN);
+        glVertex2d(x, y);
+        for(int i=0;i<=360;i++)
+        {
+            double angle = i * 3.1416 / 180;
+            glVertex2d(x + cos(angle)*12, y + sin(angle)*12);
+        }
+    glEnd();
+
+    glColor3ub(10,10,40);   // same as night sky (natural shadow)
+
+    glBegin(GL_TRIANGLE_FAN);
+        glVertex2d(x + 5, y + 2);
+        for(int i=0;i<=360;i++)
+        {
+            double angle = i * 3.1416 / 180;
+            glVertex2d(x + 5 + cos(angle)*12, y + sin(angle)*12);
+        }
+    glEnd();
+}
+
+
+
 void gear(float x, float y) {
     glPushMatrix();
     glTranslatef(x, y, 0);
@@ -82,26 +137,7 @@ void cloud(double x, double y)
 
 
 }
-void sun(double x, double y)
-{
 
-
-    glBegin(GL_TRIANGLE_FAN);
-        for(i=0;i<360;i++)
-        {
-            x=x+cos((i*3.14)/180)*s;
-            y=y+sin((i*3.14)/180)*s;
-
-            glVertex2d(x,y);
-
-        }
-
-
-    glEnd();
-
-
-
-}
 // ------------------------------------Fence-------------------------------------------------
 void fence(int x)
 {
@@ -155,8 +191,18 @@ void display()
 
 
 //-------------------SUN-------------------------
+  //-------------------==============================SUN-------------------------
+if(!isNight)
+{
     glColor3ub(255,215,0);
-    sun(90,250);
+    sun(sx,250);
+
+
+}
+else
+{
+    moon(mx,250);
+}
 
 //-------------------------------------------CLOUD-------------------------------------------------
 	glPushMatrix();
@@ -661,6 +707,29 @@ gearAngle += 0.05;
 if(gearAngle > 360)
     gearAngle -= 360;
 
+// ======================================SUN movement
+if(!isNight)
+{
+    sx += 0.03;
+
+    if(sx > 200)
+    {
+        isNight = true;   // sun gone → night start
+        mx = 220;         // moon start position reset
+    }
+}
+else
+{
+    // ==================================MOON movement
+    mx -= 0.03;
+
+    if(mx < -220)
+    {
+        isNight = false;  // reset to day
+        sx = -150;
+    }
+}
+
 //--------------------------------------------------------------------------------------------
     glFlush();
 }
@@ -678,7 +747,7 @@ int main(int argc,char *argv[])
     init();
     glutDisplayFunc(display);
 
-    glutKeyboardFunc(keyboard); // boat control 
+    glutKeyboardFunc(keyboard); // boat control + Rain
 
     glutMainLoop();
     return 0;
