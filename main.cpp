@@ -8,7 +8,8 @@ float  tx=10,bx=10;
 float sx = -150;     // sun x position
 float mx = 220;      // moon x position (start outside right)
 bool isNight = false;
-
+int starBlink = 0; //star
+float solarAngle = 0;
 float scaleFactor = 1.0f; //boat
 bool scaleUp = true;
 float gearAngle = 0.0f;
@@ -70,9 +71,51 @@ void moon(double x, double y)
         }
     glEnd();
 }
+//----------------------------------star=========================
+void star(float x, float y)
+{
+    glPointSize(4);
+    glColor3ub(255,255,255);
+    glBegin(GL_POINTS);
+        glVertex2f(x,y);
+    glEnd();
+}
+//===========================solar light======================
 
+void solarLight(double x, double y)
+{
+    // pole
+    glColor3ub(255,0,0);
+    glBegin(GL_POLYGON);
+        glVertex2d(x, y);
+        glVertex2d(x+2, y);
+        glVertex2d(x+2, y+30);
+        glVertex2d(x, y+30);
+    glEnd();
 
+    // lamp head
+    glColor3ub(50,50,50);
+    glBegin(GL_POLYGON);
+        glVertex2d(x-3, y+30);
+        glVertex2d(x+5, y+30);
+        glVertex2d(x+5, y+35);
+        glVertex2d(x-3, y+35);
+    glEnd();
 
+    // light (ON/OFF)
+    if(isNight)
+        glColor3ub(255,255,150); // glowing light
+    else
+        glColor3ub(100,100,100);
+
+    glBegin(GL_TRIANGLES);
+        glVertex2d(x-10, y+30);
+        glVertex2d(x+10, y+30);
+        glVertex2d(x, y+50);
+    glEnd();
+}
+
+//===============================gear==============================
 void gear(float x, float y) {
     glPushMatrix();
     glTranslatef(x, y, 0);
@@ -167,8 +210,32 @@ void display()
 
     glClear(GL_COLOR_BUFFER_BIT);
 //-----------------------sky------------------------------------------------------------------
-    glColor3ub(135,206,250);//light blue
-        glRecti(-200,300,200,100);
+
+
+
+//-----------------------sky------------------------------------------------------------------
+if(isNight)
+{
+    glColor3ub(10,10,40);   // dark night sky
+}
+else
+{
+    glColor3ub(135,206,250); // day sky
+}
+
+glRecti(-200,300,200,100);
+
+if(isNight)
+{
+    if(starBlink % 2 == 0)
+    {
+        star(-180,260); star(-140,240); star(-100,270);
+        star(-60,250);  star(-20,260);  star(20,240);
+        star(60,270);   star(100,250);  star(140,260);
+        star(170,230);
+    }
+}
+
 //-----------------------------------field------------------------------
     glBegin(GL_POLYGON);
         glColor3ub(0,100,0);//green
@@ -187,7 +254,6 @@ void display()
         glVertex2i(-200,100);
 
     glEnd();
-
 
 
 //-------------------SUN-------------------------
@@ -225,6 +291,7 @@ else
     tx+=.01;
     if(tx>200)
     tx=-200;
+
 // ------------------------------------fence--------------------------
     int x=0;
     for(int i=0;i<39;i++)
@@ -237,6 +304,13 @@ else
     glRecti(-200,120,200,115);
     glRecti(-200,100,200,95);
     glRecti(-200,85,200,80);
+
+    solarLight(-180, 120);
+solarLight(-120, 120);
+solarLight(-60, 120);
+solarLight(0, 120);
+solarLight(60, 120);
+solarLight(120, 120);
 
 
 //-------------------------------------TREE------------------------
@@ -539,13 +613,23 @@ else
 
 //------------------------------------------RIVER--------------------------------------------------
     glBegin(GL_POLYGON);
-        glColor3ub(30,144,255);
-        glVertex2i(-200,-50);
-        glVertex2i(200,-30);
-        glColor3ub(0,0,128);
-        glVertex2i(200,-200);
-        glVertex2i(-200,-200);
-        glVertex2i(-200,-50);
+
+    if(isNight)
+{
+    // 🌙 NIGHT RIVER (dark + reflection feel)
+    glColor3ub(0,0,50);
+}
+else
+{
+    // 🌞 DAY RIVER (blue)
+    glColor3ub(30,144,255);
+}
+  glVertex2i(-200,-50);
+glVertex2i(200,-30);
+
+glVertex2i(200,-200);
+glVertex2i(-200,-200);
+glVertex2i(-200,-50);
     glEnd();
     glBegin(GL_POLYGON); // border
         glColor3ub(128,128,0);
@@ -685,7 +769,7 @@ else
         glVertex2i(-100,-100);
     glEnd();
 
-
+solarAngle += 0.5;
 gear(-120,-90);  // ==============================grar function call
     glPopMatrix();
 
@@ -706,6 +790,8 @@ if(bx > 270)
 gearAngle += 0.05;
 if(gearAngle > 360)
     gearAngle -= 360;
+
+    starBlink++;
 
 // ======================================SUN movement
 if(!isNight)
