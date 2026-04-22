@@ -6,7 +6,7 @@ double  r=.2,s=.3;
 int i;
 float  tx=10,bx=10;
 float sx = -150;     // sun x position
-float mx = 220;      // moon x position (start outside right)
+float mx = 220;      // moon x position
 bool isNight = false;
 
 float scaleFactor = 1.0f; //boat
