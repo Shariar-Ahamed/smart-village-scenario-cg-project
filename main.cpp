@@ -8,7 +8,7 @@ float  tx=10,bx=10;
 float sx = -150;     // sun x position
 float mx = 220;      // moon x position (start outside right)
 bool isNight = false;
-int starBlink = 0; //star
+
 float scaleFactor = 1.0f; //boat
 bool scaleUp = true;
 float gearAngle = 0.0f;
@@ -71,14 +71,7 @@ void moon(double x, double y)
     glEnd();
 }
 
-void star(float x, float y)
-{
-    glPointSize(4);
-    glColor3ub(255,255,255);
-    glBegin(GL_POINTS);
-        glVertex2f(x,y);
-    glEnd();
-}
+
 
 void gear(float x, float y) {
     glPushMatrix();
@@ -268,6 +261,13 @@ else
     glRecti(-200,120,200,115);
     glRecti(-200,100,200,95);
     glRecti(-200,85,200,80);
+
+    solarLight(-180, 120);
+solarLight(-120, 120);
+solarLight(-60, 120);
+solarLight(0, 120);
+solarLight(60, 120);
+solarLight(120, 120);
 
 
 //-------------------------------------TREE------------------------
@@ -726,7 +726,7 @@ glVertex2i(-200,-50);
         glVertex2i(-100,-100);
     glEnd();
 
-
+solarAngle += 0.5;
 gear(-120,-90);  // ==============================grar function call
     glPopMatrix();
 
