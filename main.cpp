@@ -6,12 +6,45 @@ double  r=.2,s=.3;
 int i;
 float  tx=10,bx=10;
 float sx = -150;     // sun x position
-float mx = 220;      // moon x position
+float mx = 220;      // moon x position (start outside right)
 bool isNight = false;
-
+int starBlink = 0; //star
+float solarAngle = 0;
 float scaleFactor = 1.0f; //boat
 bool scaleUp = true;
 float gearAngle = 0.0f;
+
+void drawCircle(int xc, int yc, int r)
+{
+    int x = 0;
+    int y = r;
+    int d = 1 - r;
+
+    glBegin(GL_POINTS);
+
+    while(x <= y)
+    {
+        glVertex2i(xc + x, yc + y);
+        glVertex2i(xc - x, yc + y);
+        glVertex2i(xc + x, yc - y);
+        glVertex2i(xc - x, yc - y);
+        glVertex2i(xc + y, yc + x);
+        glVertex2i(xc - y, yc + x);
+        glVertex2i(xc + y, yc - x);
+        glVertex2i(xc - y, yc - x);
+
+        if(d < 0)
+            d += 2*x + 3;
+        else
+        {
+            d += 2*(x - y) + 5;
+            y--;
+        }
+        x++;
+    }
+
+    glEnd();
+}
 
 
 void init()
@@ -19,6 +52,42 @@ void init()
     glClearColor(1.0f,1.0f,1.0f,1.0f);
     glOrtho(-210,210,-220,310,-210,310);
 
+}
+
+// _________==================Windmaill===============
+void windmill(int x, int y)
+{
+    // pole
+    glColor3ub(139,69,19);
+    glBegin(GL_POLYGON);
+        glVertex2i(x, y);
+        glVertex2i(x+4, y);
+        glVertex2i(x+4, y+80);
+        glVertex2i(x, y+80);
+    glEnd();
+
+    // head (rotating)
+    glPushMatrix();
+    glTranslatef(x+2, y+80, 0);
+    glRotatef(gearAngle, 0, 0, 1);
+
+    glColor3ub(250,0,0);
+
+    glBegin(GL_LINES);
+        glVertex2f(0,0);
+        glVertex2f(20,0);
+
+        glVertex2f(0,0);
+        glVertex2f(-20,0);
+
+        glVertex2f(0,0);
+        glVertex2f(0,20);
+
+        glVertex2f(0,0);
+        glVertex2f(0,-20);
+    glEnd();
+
+    glPopMatrix();
 }
 //-----------------------sun------------------------------------------------------------------
 
@@ -70,9 +139,51 @@ void moon(double x, double y)
         }
     glEnd();
 }
+//----------------------------------star=========================
+void star(float x, float y)
+{
+    glPointSize(4);
+    glColor3ub(255,255,255);
+    glBegin(GL_POINTS);
+        glVertex2f(x,y);
+    glEnd();
+}
+//===========================solar light======================
 
+void solarLight(double x, double y)
+{
+    // pole
+    glColor3ub(255,0,0);
+    glBegin(GL_POLYGON);
+        glVertex2d(x, y);
+        glVertex2d(x+2, y);
+        glVertex2d(x+2, y+30);
+        glVertex2d(x, y+30);
+    glEnd();
 
+    // lamp head
+    glColor3ub(50,50,50);
+    glBegin(GL_POLYGON);
+        glVertex2d(x-3, y+30);
+        glVertex2d(x+5, y+30);
+        glVertex2d(x+5, y+35);
+        glVertex2d(x-3, y+35);
+    glEnd();
 
+    // light (ON/OFF)
+    if(isNight)
+        glColor3ub(255,255,150); // glowing light
+    else
+        glColor3ub(100,100,100);
+
+    glBegin(GL_TRIANGLES);
+        glVertex2d(x-10, y+30);
+        glVertex2d(x+10, y+30);
+        glVertex2d(x, y+50);
+    glEnd();
+}
+
+//===============================gear==============================
 void gear(float x, float y) {
     glPushMatrix();
     glTranslatef(x, y, 0);
@@ -211,6 +322,9 @@ if(isNight)
         glVertex2i(-200,100);
 
     glEnd();
+
+
+    windmill(150, 100);
 
 
 //-------------------SUN-------------------------
@@ -790,7 +904,7 @@ int main(int argc,char *argv[])
     init();
     glutDisplayFunc(display);
 
-    glutKeyboardFunc(keyboard); // boat control 
+    glutKeyboardFunc(keyboard); // boat control + Rain
 
     glutMainLoop();
     return 0;
