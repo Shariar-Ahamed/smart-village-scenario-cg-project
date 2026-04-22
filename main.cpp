@@ -18,7 +18,7 @@ void init()
     glOrtho(-210,210,-220,310,-210,310);
 
 }
-void drawGear(float x, float y) {
+void gear(float x, float y) {
     glPushMatrix();
     glTranslatef(x, y, 0);
     glRotatef(gearAngle, 0, 0, 1); // Rotate on Z-axis
@@ -151,6 +151,8 @@ void display()
         glVertex2i(-200,100);
 
     glEnd();
+
+
 
 //-------------------SUN-------------------------
     glColor3ub(255,215,0);
@@ -514,6 +516,7 @@ void display()
 	glColor3f(0.0f, 0.0f, 0.0f);//Black
     glTranslatef(bx,0,0);
     glScalef(scaleFactor, scaleFactor, 1.0);
+//    drawGear(-120, -85);
     glBegin(GL_POLYGON);
         glVertex2i(-180,-70);
         glVertex2i(-165,-100);
@@ -637,7 +640,7 @@ void display()
     glEnd();
 
 
-
+gear(-120,-90);  // ==============================grar function call
     glPopMatrix();
 
 
@@ -651,6 +654,12 @@ void display()
 bx += 0.03;
 if(bx > 270)
     bx = -180;
+// ---------------- GEAR ----------------
+
+// ============================================Gear rotation
+gearAngle += 0.05;
+if(gearAngle > 360)
+    gearAngle -= 360;
 
 //--------------------------------------------------------------------------------------------
     glFlush();
@@ -669,7 +678,7 @@ int main(int argc,char *argv[])
     init();
     glutDisplayFunc(display);
 
-    glutKeyboardFunc(keyboard); // boat control
+    glutKeyboardFunc(keyboard); // boat control 
 
     glutMainLoop();
     return 0;
