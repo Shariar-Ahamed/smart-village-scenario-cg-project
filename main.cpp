@@ -14,10 +14,6 @@ float solarAngle = 0;
 bool isRaining = false;
 float rainX[200], rainY[200];
 
-float manX = -200;
-float womanX = -120;
-float childX = -50;
-
 float scaleFactor = 1.0f;
 bool scaleUp = true;
 float gearAngle = 0.0f;
@@ -256,42 +252,6 @@ void walkingPath()
     DDA(-200, -15, 200, -15);
 }
 
-// human
-void drawHuman(float x, float y)
-{
-    glPushMatrix();
-    glTranslatef(x, y, 0);
-
-    // Body
-    glColor3ub(0,0,0);
-    glRecti(-3, 10, 3, 30);
-
-    // Head
-    glColor3ub(255,220,177);
-    glBegin(GL_TRIANGLE_FAN);
-        for(int i=0;i<=360;i++)
-        {
-            float a = i * 3.1416 / 180;
-            glVertex2f(cos(a)*5, 35 + sin(a)*5);
-        }
-    glEnd();
-
-    // Arms
-    glColor3ub(0,0,0);
-    glBegin(GL_LINES);
-        glVertex2i(-3,25); glVertex2i(-8,18);
-        glVertex2i(3,25);  glVertex2i(8,18);
-    glEnd();
-
-    // Legs
-    glBegin(GL_LINES);
-        glVertex2i(-2,10); glVertex2i(-5,0);
-        glVertex2i(2,10);  glVertex2i(5,0);
-    glEnd();
-
-    glPopMatrix();
-}
-
 
 // -------------Gear ________________________
 
@@ -368,47 +328,6 @@ void drawRain()
     glEnd();
 }
 
-
-// dram man
-void drawMan()
-{
-    glPushMatrix();
-    glTranslatef(manX, -20, 0);   // path position
-
-    // Body
-    glColor3ub(0,0,0);
-    glRecti(-3, 10, 3, 30);
-
-    // Head (simple circle)
-    glColor3ub(255,220,177);
-    glBegin(GL_TRIANGLE_FAN);
-        for(int i=0;i<=360;i++)
-        {
-            float a = i * 3.1416 / 180;
-            glVertex2f(cos(a)*5, 35 + sin(a)*5);
-        }
-    glEnd();
-
-    // Legs (walking effect)
-    glBegin(GL_LINES);
-        glVertex2i(-2,10);
-        glVertex2i(-5,0);
-
-        glVertex2i(2,10);
-        glVertex2i(5,0);
-    glEnd();
-
-    // Arms
-    glBegin(GL_LINES);
-        glVertex2i(-3,25);
-        glVertex2i(-8,18);
-
-        glVertex2i(3,25);
-        glVertex2i(8,18);
-    glEnd();
-
-    glPopMatrix();
-}
 
 
 //-------------------------Boat scelaing control-------------------------------------------------------------------
@@ -827,10 +746,6 @@ solarLight(120, 120);
 
     glEnd();
 
-drawMan();
-drawHuman(manX, -20);
-drawHuman(womanX, -25);
-drawHuman(childX, -30);
 
 walkingPath();
 //------------------------------------------RIVER--------------------------------------------------
@@ -1075,17 +990,6 @@ else
     }
 }
 
-// man
-manX += 0.05;
-if(manX > 200) manX = -200;
-
-// woman (slow)
-womanX += 0.03;
-if(womanX > 200) womanX = -200;
-
-// child (fast)
-childX += 0.04;
-if(childX > 200) childX = -200;
 //--------------------------------------------------------------------------------------------
     glFlush();
 }
