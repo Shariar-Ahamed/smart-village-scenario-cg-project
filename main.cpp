@@ -11,6 +11,13 @@ bool isNight = false;
 int starBlink = 0;
 float solarAngle = 0;
 
+bool isRaining = false;
+float rainX[200], rainY[200];
+
+float manX = -200;
+float womanX = -120;
+float childX = -50;
+
 float scaleFactor = 1.0f;
 bool scaleUp = true;
 float gearAngle = 0.0f;
@@ -82,6 +89,13 @@ void init()
     glEnable(GL_POINT_SMOOTH);
     glPointSize(4);
     glPointSize(2.0);
+
+    // rain
+    for(int i=0;i<200;i++)
+{
+    rainX[i] = rand()%400 - 200;
+    rainY[i] = rand()%300;
+}
 }
 
 // _________Windmaill
@@ -164,22 +178,7 @@ void sun(double x, double y)
 
 }
 
-//-----------Sun Ray
-void sunRays(float cx, float cy)
-{
-    glColor3ub(255, 255, 0);
 
-    // 8 directions rays
-    DDA(cx, cy, cx+40, cy);
-    DDA(cx, cy, cx-40, cy);
-    DDA(cx, cy, cx, cy+40);
-    DDA(cx, cy, cx, cy-40);
-
-    DDA(cx, cy, cx+30, cy+30);
-    DDA(cx, cy, cx-30, cy+30);
-    DDA(cx, cy, cx+30, cy-30);
-    DDA(cx, cy, cx-30, cy-30);
-}
 
 void moon(double x, double y)
 {
@@ -257,6 +256,42 @@ void walkingPath()
     DDA(-200, -15, 200, -15);
 }
 
+// human
+void drawHuman(float x, float y)
+{
+    glPushMatrix();
+    glTranslatef(x, y, 0);
+
+    // Body
+    glColor3ub(0,0,0);
+    glRecti(-3, 10, 3, 30);
+
+    // Head
+    glColor3ub(255,220,177);
+    glBegin(GL_TRIANGLE_FAN);
+        for(int i=0;i<=360;i++)
+        {
+            float a = i * 3.1416 / 180;
+            glVertex2f(cos(a)*5, 35 + sin(a)*5);
+        }
+    glEnd();
+
+    // Arms
+    glColor3ub(0,0,0);
+    glBegin(GL_LINES);
+        glVertex2i(-3,25); glVertex2i(-8,18);
+        glVertex2i(3,25);  glVertex2i(8,18);
+    glEnd();
+
+    // Legs
+    glBegin(GL_LINES);
+        glVertex2i(-2,10); glVertex2i(-5,0);
+        glVertex2i(2,10);  glVertex2i(5,0);
+    glEnd();
+
+    glPopMatrix();
+}
+
 
 // -------------Gear ________________________
 
@@ -312,6 +347,70 @@ void fence(int x)
 
 }
 
+// rain
+void drawRain()
+{
+    if(!isRaining) return;
+
+    glColor3ub(173,216,230);
+
+    glBegin(GL_LINES);
+    for(int i=0;i<200;i++)
+    {
+        glVertex2f(rainX[i], rainY[i]);
+        glVertex2f(rainX[i], rainY[i]-10);
+
+        rainY[i] -= 4;
+
+        if(rainY[i] < -200)
+            rainY[i] = 300;
+    }
+    glEnd();
+}
+
+
+// dram man
+void drawMan()
+{
+    glPushMatrix();
+    glTranslatef(manX, -20, 0);   // path position
+
+    // Body
+    glColor3ub(0,0,0);
+    glRecti(-3, 10, 3, 30);
+
+    // Head (simple circle)
+    glColor3ub(255,220,177);
+    glBegin(GL_TRIANGLE_FAN);
+        for(int i=0;i<=360;i++)
+        {
+            float a = i * 3.1416 / 180;
+            glVertex2f(cos(a)*5, 35 + sin(a)*5);
+        }
+    glEnd();
+
+    // Legs (walking effect)
+    glBegin(GL_LINES);
+        glVertex2i(-2,10);
+        glVertex2i(-5,0);
+
+        glVertex2i(2,10);
+        glVertex2i(5,0);
+    glEnd();
+
+    // Arms
+    glBegin(GL_LINES);
+        glVertex2i(-3,25);
+        glVertex2i(-8,18);
+
+        glVertex2i(3,25);
+        glVertex2i(8,18);
+    glEnd();
+
+    glPopMatrix();
+}
+
+
 //-------------------------Boat scelaing control-------------------------------------------------------------------
 
 //---------------- KEYBOARD ONLY BOAT ----------------
@@ -330,6 +429,17 @@ void keyboard(unsigned char key, int x, int y)
 
         case 'r':   // reset size
             scaleFactor = 1.0f;
+            break;
+    }
+
+        switch(key)
+    {
+        case 's':   // rain ON
+            isRaining = true;
+            break;
+
+        case 't':   // rain OFF
+            isRaining = false;
             break;
     }
 }
@@ -717,6 +827,10 @@ solarLight(120, 120);
 
     glEnd();
 
+drawMan();
+drawHuman(manX, -20);
+drawHuman(womanX, -25);
+drawHuman(childX, -30);
 
 walkingPath();
 //------------------------------------------RIVER--------------------------------------------------
@@ -907,6 +1021,11 @@ glEnd();
         glVertex2i(-100,-100);
     glEnd();
 
+if(isNight && isRaining)
+{
+    glColor3ub(80, 80, 120); // dark rain mood
+}
+drawRain();
 
 solarAngle += 0.5;
 gear(-120,-90);
@@ -926,7 +1045,7 @@ if(bx > 270)
     bx = -180;
 
 // Gear rotation
-gearAngle += 5.0;
+gearAngle += 1.0;
 if(gearAngle > 360)
     gearAngle -= 360;
 
@@ -955,9 +1074,18 @@ else
         sx = -150;
     }
 }
-gearAngle += 2.0;
-if(gearAngle > 360)
-    gearAngle -= 360;
+
+// man
+manX += 0.05;
+if(manX > 200) manX = -200;
+
+// woman (slow)
+womanX += 0.03;
+if(womanX > 200) womanX = -200;
+
+// child (fast)
+childX += 0.04;
+if(childX > 200) childX = -200;
 //--------------------------------------------------------------------------------------------
     glFlush();
 }
