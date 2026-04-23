@@ -90,7 +90,7 @@ g++ main.cpp -o village -lGL -lGLU -lglut
 
 ---
 ## 🖥️ Output
-<div align="center"> <img src="output-demo/village.gif" alt="Smart Village Animation Output" width="700"/> </div>
+<div align="center"> <img src="output-demo/img-4.png" alt="Smart Village Animation Output" width="700"/> </div>
 
 ---
 ## 🖥️ Example Workflow
