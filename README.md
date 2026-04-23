@@ -18,6 +18,7 @@
   - [🛠️ Technologies Used](#️-technologies-used)
   - [📂 Project Structure](#-project-structure)
   - [⚙️ Installation \& Usage](#️-installation--usage)
+  - [🖥️ Output](#️-output)
   - [🖥️ Example Workflow](#️-example-workflow)
   - [📊 Performance](#-performance)
   - [⚠️ Limitations](#️-limitations)
@@ -88,7 +89,10 @@ g++ main.cpp -o village -lGL -lGLU -lglut
 ```
 
 ---
+## 🖥️ Output
+<div align="center"> <img src="output-demo/village.gif" alt="Smart Village Animation Output" width="700"/> </div>
 
+---
 ## 🖥️ Example Workflow
 ```bash
 1. Run the program
