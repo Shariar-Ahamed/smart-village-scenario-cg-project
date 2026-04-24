@@ -47,6 +47,8 @@
   - Works in both day & night mode
 - 🌌 Solar system visualization
 - 🖥️ Full-screen animated environment
+- 🚗 Car Movement **Translation algorithm**
+  - Keyboard control → `A` (Left), `D` (Right)
 
 ---
 
