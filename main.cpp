@@ -80,6 +80,29 @@ void drawCircle(int xc, int yc, int r)
     glEnd();
 }
 
+// ======================= APPLE ======================
+void drawApple(int x, int y)
+{
+    // 🍎 Apple body
+    glColor3ub(255,0,0); // red
+    drawCircle(x, y, 3);
+
+    // 🌿 Leaf
+    glColor3ub(0,150,0);
+    glBegin(GL_TRIANGLES);
+        glVertex2i(x, y+4);
+        glVertex2i(x+3, y+6);
+        glVertex2i(x+1, y+3);
+    glEnd();
+
+    // 🌱 Stem
+    glColor3ub(101,67,33);
+    glBegin(GL_LINES);
+        glVertex2i(x, y+3);
+        glVertex2i(x, y+6);
+    glEnd();
+}
+
 
 void init()
 {
@@ -612,6 +635,13 @@ solarLight(120, 120);
         sun(-180,200);
         sun(-175,225);
         sun(-195,190);
+
+        // 🍎 Apples on tree
+drawApple(-95,200);
+drawApple(-110,180);
+drawApple(-130,200);
+drawApple(-175,210);
+drawApple(-140,230);
 
 
 //-----------------------------------------------TUBEWELL-----------------------------------------
