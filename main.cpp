@@ -367,22 +367,57 @@ void gear(double x, double y)
     glPopMatrix();
 }
 
+
+// =====================================================breserhum
+void drawLineBresenham(int x1, int y1, int x2, int y2)
+{
+    int dx = abs(x2 - x1);
+    int dy = abs(y2 - y1);
+
+    int sx = (x1 < x2) ? 1 : -1;
+    int sy = (y1 < y2) ? 1 : -1;
+
+    int err = dx - dy;
+
+    glBegin(GL_POINTS);
+
+    while (true)
+    {
+        glVertex2i(x1, y1);
+
+        if (x1 == x2 && y1 == y2)
+            break;
+
+        int e2 = 2 * err;
+
+        if (e2 > -dy)
+        {
+            err -= dy;
+            x1 += sx;
+        }
+        if (e2 < dx)
+        {
+            err += dx;
+            y1 += sy;
+        }
+    }
+
+    glEnd();
+}
+
 // ------------------------------------Fence-------------------------------------------------
 void fence(int x)
 {
-    glBegin(GL_POLYGON);
-        glColor3ub(184,134,11);
+    glColor3ub(184,134,11);
 
-        glVertex2i(190-x,130);
-        glVertex2i(190-x,70);
-        glVertex2i(187-x,70);
-        glVertex2i(187-x,130);
-        glVertex2i(190-x,130);
+    // Vertical lines (stick)
+    drawLineBresenham(190-x,130,190-x,70);
+    drawLineBresenham(187-x,130,187-x,70);
 
-
-
-    glEnd();
-
+    // Top triangle style
+    drawLineBresenham(187-x,130,190-x,130);
+    drawLineBresenham(187-x,130,188-x,140);
+    drawLineBresenham(188-x,140,190-x,130);
 }
 
 // =============================================rain================================
