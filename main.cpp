@@ -22,6 +22,7 @@ bool nightMode = false;
 float scaleFactor = 1.0f; //boat
 bool scaleUp = true;
 float gearAngle = 0.0f;
+float carX = -150;   // car position
 
 // ==================================================DDa algorithom
 void DDA(float x1, float y1, float x2, float y2)
@@ -367,6 +368,38 @@ void gear(double x, double y)
     glPopMatrix();
 }
 
+// ===================== SIMPLE CAR =====================
+void drawCar()
+{
+    glPushMatrix();
+    glTranslatef(carX, -10, 0); // field position
+
+    // 🚗 body
+    glColor3ub(200,0,0);
+    glBegin(GL_POLYGON);
+        glVertex2i(-15,10);
+        glVertex2i(25,10);
+        glVertex2i(30,20);
+        glVertex2i(-20,20);
+    glEnd();
+
+    // 🪟 window
+    glColor3ub(173,216,230);
+    glBegin(GL_POLYGON);
+        glVertex2i(-5,20);
+        glVertex2i(10,20);
+        glVertex2i(8,28);
+        glVertex2i(-2,28);
+    glEnd();
+
+    // 🚗 wheels (midpoint circle use)
+    glColor3ub(0,0,0);
+    drawCircle(-10, 10, 4);
+    drawCircle(20, 10, 4);
+
+    glPopMatrix();
+}
+
 
 // =====================================================breserhum
 void drawLineBresenham(int x1, int y1, int x2, int y2)
@@ -491,32 +524,37 @@ void keyboard(unsigned char key, int x, int y)
 {
     switch(key)
     {
-        case '+':   // zoom in
+        case '+':
             scaleFactor += 0.05f;
             break;
 
-        case '-':   // zoom out
+        case '-':
             scaleFactor -= 0.05f;
-            if(scaleFactor < 0.2f) scaleFactor = 0.2f; // limit
+            if(scaleFactor < 0.2f) scaleFactor = 0.2f;
             break;
 
-        case 'r':   // reset size
+        case 'r':
             scaleFactor = 1.0f;
             break;
-    }
 
-        switch(key)
-    {
-        case 's':   // rain ON
+        case 's':
             isRaining = true;
             break;
 
-        case 't':   // rain OFF
+        case 't':
             isRaining = false;
+            break;
+
+        // 🚗 CAR CONTROL
+        case 'a':   // left
+            carX -= 5;
+            break;
+
+        case 'd':   // right
+            carX += 5;
             break;
     }
 }
-
 
 void display()
 {
@@ -569,6 +607,9 @@ if(isNight)
 
 
     glEnd();
+
+
+
 //======================================windmill call====================
     windmill(150, 100);
 
@@ -910,6 +951,7 @@ drawApple(-140,230);
 
 
     glEnd();
+
 //=================================man==================
 //drawMan();
 //drawHuman(manX, -20);
@@ -923,7 +965,7 @@ if(!isNight)
 }
 
 walkingPath();
-
+drawCar();
 //------------------------------------------RIVER--------------------------------------------------
 glBegin(GL_POLYGON);
 
