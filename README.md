@@ -4,6 +4,7 @@
 ![Graphics](https://img.shields.io/badge/Graphics-OpenGL%20%7C%20GLUT-orange.svg)
 ![Course](https://img.shields.io/badge/Course-CSE412%2F422-blueviolet.svg)
 ![Status](https://img.shields.io/badge/Status-Completed-brightgreen.svg)
+<a href="https://wakatime.com/badge/user/c7433bc5-6f12-4c97-baea-430790fa608c/project/f20a98f8-c592-476d-a23e-3c11f9104204"><img src="https://wakatime.com/badge/user/c7433bc5-6f12-4c97-baea-430790fa608c/project/f20a98f8-c592-476d-a23e-3c11f9104204.svg" alt="wakatime"></a>
 
 > A **realistic Smart Village simulation** built using **OpenGL & GLUT in C++**, showcasing a dynamic rural environment with animations and computer graphics algorithms.  
 > This project was developed as part of the **Computer Graphics Lab (CSE412/422)** course at  
